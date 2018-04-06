@@ -1,10 +1,13 @@
 #!/usr/bin/env bash
 
 # constants
-readonly DEFAULT_BRANCH="develop"
-readonly PROJECT_LOCATION="/Users/jasonatwood/orion/obdroid"
-readonly SPOON_RESULT_LOCATION="onbeep/build/spoon-output/debug" # relative to PROJECT_LOCATION or absolute
-readonly UPLOAD_LOCATION="/Users/jasonatwood/Google Drive/spoon results"
+readonly DEFAULT_BRANCH="master"
+readonly PROJECT_LOCATION="/Users/me/my_app"
+readonly UPLOAD_LOCATION="/Users/me/Google Drive/spoon results"
+
+declare -a modules=("app" 
+		"android_library"
+                )
 
 
 # ----------------------
@@ -25,38 +28,43 @@ then
 fi
 echo "You selected branch: $branch_name"
 
-
 printf "\\n--------- CDing into project ---------\\n"
 cd $PROJECT_LOCATION || exit
 pwd
-
 
 printf "\\n--------- Pulling %s branch ---------\\n" "$branch_name"
 git checkout $branch_name
 git pull -f
 
-
 printf "\\n--------- List of devices tests will run on ---------\\n"
 adb devices
 
-
 printf "\\n--------- Running Spoon ---------\\n"
-./gradlew clean spoonDebug
-
-
-printf "\\n--------- Results are ready ---------\\n"
-open "$SPOON_RESULT_LOCATION/index.html"
-
+./gradlew clean
+# loop through each module
+for i in "${modules[@]}"
+do
+  echo "Running spoon on module: $i"
+  ./gradlew "$i":spoonDebug
+done
 
 printf "\\n--------- Uploading results ---------\\n"
-# upload output to Google Drive, Dropbox, etc. 
-# by copying files to EXISTING Google Drive, Dropbox folder
-# and let their auto-sync functionality do the work for you
+base_upload_directory="$UPLOAD_LOCATION/$USER/$(timestamp)_$branch_name"
 
-upload_directory="$UPLOAD_LOCATION/$USER/$(timestamp)_$branch_name"
-mkdir -p "$upload_directory"
-cp -R "$SPOON_RESULT_LOCATION" "$upload_directory"
-printf "results uploaded to: %s\\n" "$upload_directory"
+for i in "${modules[@]}"
+do
+  open "$PROJECT_LOCATION/$i/build/spoon-output/debug/index.html"
+
+  # upload output to Google Drive, Dropbox, etc. 
+  # by copying files to EXISTING Google Drive, Dropbox folder
+  # and let their auto-sync functionality do the work for you
+
+  upload_directory="$base_upload_directory/$i"
+  mkdir -p "$upload_directory"
+  cp -R "$PROJECT_LOCATION/$i/build/spoon-output/debug" "$upload_directory"
+  printf "results uploaded to: %s\\n" "$upload_directory"
+
+done
 
 # code checked via https://www.shellcheck.net/
 
