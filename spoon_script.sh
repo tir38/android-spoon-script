@@ -39,18 +39,20 @@ git pull -f
 printf "\\n--------- List of devices tests will run on ---------\\n"
 adb devices
 
-printf "\\n--------- Running Spoon ---------\\n"
+printf "\\n--------- Running gradle clean ---------\\n"
 ./gradlew clean
+
+
 # loop through each module
 for i in "${modules[@]}"
 do
-  echo "Running spoon on module: $i"
+  printf "\\n--------- Running spoon on module: %s ---------\\n" "$i"
   ./gradlew "$i":spoonDebug
 done
 
 printf "\\n--------- Uploading results ---------\\n"
-base_upload_directory="$UPLOAD_LOCATION/$USER/$(timestamp)_$branch_name"
 
+base_upload_directory="$UPLOAD_LOCATION/$USER/$(timestamp)_$branch_name"
 for i in "${modules[@]}"
 do
   open "$PROJECT_LOCATION/$i/build/spoon-output/debug/index.html"
