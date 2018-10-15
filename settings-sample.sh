@@ -1,4 +1,4 @@
-# Please copy this file to settings.sh and modify as needed.
+# Please copy this file to settings.sh, grant it executable permissions and modify as needed.
 
 # constants
 readonly DEFAULT_BRANCH="master"
