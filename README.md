@@ -23,7 +23,7 @@ Now it's easy for developers and non-developers alike to trigger a Spoon build a
 
 ## Setup
 
-In the script, update the default values:
+Rename `settings-sample.sh` to `settings.sh` and update values:
 
 ```
 readonly DEFAULT_BRANCH="master"

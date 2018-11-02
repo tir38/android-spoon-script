@@ -1,18 +1,7 @@
 #!/usr/bin/env bash
 
-# constants
-readonly DEFAULT_BRANCH="master"
-readonly PROJECT_LOCATION="/Users/me/my_app"
-readonly UPLOAD_LOCATION="/Users/me/Google Drive/spoon results"
-
-declare -a modules=("app" 
-		"android_library"
-                )
-
-
-# ----------------------
-# DO NOT UPDATE ANY CODE BELOW
-# ----------------------
+# Grab user settings
+source settings.sh
 
 # Define a timestamp function
 timestamp() {
@@ -57,7 +46,7 @@ for i in "${modules[@]}"
 do
   open "$PROJECT_LOCATION/$i/build/spoon-output/debug/index.html"
 
-  # upload output to Google Drive, Dropbox, etc. 
+  # upload output to Google Drive, Dropbox, etc.
   # by copying files to EXISTING Google Drive, Dropbox folder
   # and let their auto-sync functionality do the work for you
 
@@ -69,4 +58,3 @@ do
 done
 
 # code checked via https://www.shellcheck.net/
-
