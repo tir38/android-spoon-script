@@ -1,23 +1,7 @@
 #!/usr/bin/env bash
 
 # Grab user settings
-script_dir="$(dirname "$0")"
-
-if [ ! -f "$script_dir/settings.sh" ]; then
-    echo "No settings.sh file found. Please copy and modify settings-sample.sh to settings.sh."
-	exit
-else
-	"$script_dir/settings.sh"
-fi
-
-declare -a modules=("app"
-		"android_library"
-                )
-
-
-# ----------------------
-# DO NOT UPDATE ANY CODE BELOW
-# ----------------------
+source settings.sh
 
 # Define a timestamp function
 timestamp() {
